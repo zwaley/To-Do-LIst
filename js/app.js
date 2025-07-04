@@ -43,7 +43,6 @@ class TodoApp {
         // 获取DOM元素
         const taskInput = document.getElementById('taskInput');
         const addBtn = document.getElementById('addBtn');
-        const filterBtns = document.querySelectorAll('.filter-btn');
         const clearCompletedBtn = document.getElementById('clearCompleted');
         const markAllCompleteBtn = document.getElementById('markAllComplete');
         
@@ -55,10 +54,13 @@ class TodoApp {
             }
         });
         
-        // 筛选按钮事件
-        filterBtns.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                this.setFilter(e.target.dataset.filter);
+        // 统计区域点击事件 - 实现筛选功能
+        const statItems = document.querySelectorAll('.stat-item');
+        statItems.forEach((item, index) => {
+            item.style.cursor = 'pointer';
+            item.addEventListener('click', () => {
+                const filters = ['all', 'pending', 'completed'];
+                this.setFilter(filters[index]);
             });
         });
         
@@ -311,11 +313,14 @@ class TodoApp {
     setFilter(filter) {
         this.currentFilter = filter;
         
-        // 更新筛选按钮状态
-        document.querySelectorAll('.filter-btn').forEach(btn => {
-            btn.classList.remove('active');
-            if (btn.dataset.filter === filter) {
-                btn.classList.add('active');
+        // 更新统计区域的活跃状态
+        const statItems = document.querySelectorAll('.stat-item');
+        const filterIndex = ['all', 'pending', 'completed'].indexOf(filter);
+        
+        statItems.forEach((item, index) => {
+            item.classList.remove('active');
+            if (index === filterIndex) {
+                item.classList.add('active');
             }
         });
         

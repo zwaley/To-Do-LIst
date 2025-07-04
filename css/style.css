@@ -186,11 +186,25 @@ body {
     background: var(--bg-secondary);
     border-radius: var(--radius-lg);
     transition: var(--transition-normal);
+    cursor: pointer;
+    user-select: none;
 }
 
 .stat-item:hover {
+    background: rgba(255, 255, 255, 0.2);
     transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.stat-item.active {
+    background: rgba(255, 255, 255, 0.25);
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.stat-item:active {
+    transform: translateY(0);
 }
 
 .stat-number {
