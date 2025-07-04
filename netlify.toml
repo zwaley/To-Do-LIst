@@ -1,0 +1,85 @@
+# Netlify 部署配置文件
+# 用于配置 To-Do List 应用的部署设置
+
+[build]
+  # 发布目录（项目根目录）
+  publish = "."
+  
+  # 构建命令（静态网站无需构建）
+  command = "echo 'No build step required for static site'"
+
+# HTTP 安全头配置
+[[headers]]
+  # 应用到所有文件
+  for = "/*"
+  [headers.values]
+    # 防止页面被嵌入到 iframe 中
+    X-Frame-Options = "DENY"
+    # XSS 保护
+    X-XSS-Protection = "1; mode=block"
+    # 防止 MIME 类型嗅探
+    X-Content-Type-Options = "nosniff"
+    # 引用策略
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    # 内容安全策略
+    Content-Security-Policy = "default-src 'self'; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; font-src 'self' https://cdnjs.cloudflare.com; script-src 'self' 'unsafe-inline'; img-src 'self' data:;"
+
+# 缓存配置
+[[headers]]
+  for = "*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# 重定向配置（单页应用支持）
+[[redirects]]
+  # 将所有路径重定向到 index.html（SPA 路由支持）
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  # 不重定向已存在的文件
+  conditions = {Role = ["admin"], Country = ["!US"]}
+  force = false
+
+# 环境变量（如果需要）
+[context.production.environment]
+  NODE_ENV = "production"
+
+[context.deploy-preview.environment]
+  NODE_ENV = "development"
+
+# 插件配置（可选）
+[[plugins]]
+  package = "netlify-plugin-minify-html"
+  
+  [plugins.inputs]
+    contexts = ["production"]
+
+# 表单处理（如果应用中有表单）
+# [build.processing]
+#   skip_processing = false
+# [build.processing.css]
+#   bundle = true
+#   minify = true
+# [build.processing.js]
+#   bundle = true
+#   minify = true
+# [build.processing.html]
+#   pretty_urls = true
+
+# 函数配置（如果使用 Netlify Functions）
+# [build]
+#   functions = "netlify/functions"
+
+# 边缘函数配置（高级功能）
+# [build]
+#   edge_functions = "netlify/edge-functions"
